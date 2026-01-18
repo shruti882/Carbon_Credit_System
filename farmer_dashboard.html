@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}Farmer Dashboard - Carbon Credit System{% endblock %}
+
+{% block body %}
+<!-- ✅ Sidebar Layout -->
+<div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#industries">Industries</a></li>
+            <li><a href="#requests">Credit Requests</a></li>
+            <li><a href="{% url 'app:submit_proof_page' %}">Submit Proof</a></li>
+            <li><a href="#history">Transaction History</a></li>
+            <li><a href="{% url 'app:logout' %}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div class="dashboard-container">
+        <h2 class="dashboard-title">Welcome, {{ request.user.username }} (Farmer)</h2>
+
+        <div class="stats-container">
+            <p><strong>Credit Balance:</strong> {{ user_profile.credit_balance }} credits</p>
+            <p><strong>Wallet Balance:</strong> {{ wallet_balance }} ETH</p>
+        </div>
+
+        <!-- ✅ Industries in Farmer's City -->
+        <h3 id="industries" class="section-title">Industries in Your City</h3>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Industry Name</th>
+                        <th>Ethereum Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for industry in industries %}
+                    <tr>
+                        <td>{{ industry.user.username }}</td>
+                        <td>{{ industry.ethereum_address }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2">No industries in your city.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ✅ Pending Credit Requests -->
+        <h3 id="requests" class="section-title">Pending Credit Requests</h3>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Industry Name</th>
+                        <th>Credits Requested</th>
+                        <th>Ethereum Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in pending_requests %}
+                    <tr>
+                        <td>{{ request.buyer.user.username }}</td>
+                        <td>{{ request.credits_requested }}</td>
+                        <td>{{ request.eth_amount }}</td>
+                        <td>
+                            <form action="{% url 'app:approve_credit_request' request.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit">Approve</button>
+                            </form>
+                            
+                            <form action="{% url 'app:reject_credit_request' request.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit">Reject Request</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No pending requests.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ✅ Submit Tree Plantation Proof -->
+        <h3 id="proof" class="section-title">Submit Tree Plantation Proof</h3>
+        <form action="{% url 'app:upload_proof' %}" method="POST" enctype="multipart/form-data" class="form-container">
+            {% csrf_token %}
+            <label for="tree_count">Number of Trees Planted:</label>
+            <input type="number" name="tree_count" min="1" required>
+
+            <label for="proof_image">Upload Proof Image:</label>
+            <input type="file" name="proof_image" accept="image/*" required>
+
+            <button type="submit" class="submit-btn">Submit Proof</button>
+        </form>
+
+        <!-- ✅ Transaction History -->
+        <h3 id="history" class="section-title">Transaction History</h3>
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Buyer</th>
+                        <th>Buyer Ethereum Address</th>
+                        <th>Credits Sold</th>
+                        <th>ETH Received</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.buyer.user.username }}</td>
+                        <td>{{ transaction.buyer.ethereum_address }}</td>
+                        <td>{{ transaction.credits_sold }}</td>
+                        <td>{{ transaction.eth_amount }}</td>
+                        <td>{{ transaction.transaction_date }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No transactions found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Sidebar + Content Layout Fix -->
+<style>
+    /* Wrapper for Sidebar & Main Content */
+    .dashboard-wrapper {
+        display: flex;
+    }
+
+    /* ✅ Sidebar Styling */
+    .sidebar {
+        width: 220px;
+        background-color: #2e7d32;
+        color: white;
+        padding: 20px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 60px;
+        overflow-y: auto;
+    }
+
+    .sidebar h2 {
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar ul li {
+        margin: 10px 0;
+    }
+
+    .sidebar ul li a {
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        display: block;
+        padding: 8px;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+
+    .sidebar ul li a:hover {
+        background-color: #1b5e20;
+    }
+
+    .logout-btn {
+        background-color: red;
+        display: block;
+        text-align: center;
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .logout-btn:hover {
+        background-color: darkred;
+    }
+
+    /* ✅ Main Content Styling */
+    .dashboard-container {
+        margin-left: 240px;
+        padding: 20px;
+        flex-grow: 1;
+        background: white;
+    }
+
+    /* ✅ Table Layout Fix */
+    .table-container {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background: white;
+    }
+
+    .styled-table th, .styled-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .styled-table th {
+        background: #388e3c;
+        color: white;
+    }
+
+    .styled-table tr:nth-child(even) {
+        background: #f1f8e9;
+    }
+
+    .styled-table tr:hover {
+        background: #c8e6c9;
+    }
+</style>
+
+{% endblock %}

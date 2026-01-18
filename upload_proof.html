@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Officer Dashboard{% endblock %}
+
+{% block body %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Upload Proof Image:</label>
+    <input type="file" name="proof_image" required>
+    <label>Number of Trees Planted:</label>
+    <input type="number" name="tree_count" min="1" required>
+    <button type="submit">Submit Proof</button>
+</form>
+{% endblock %}

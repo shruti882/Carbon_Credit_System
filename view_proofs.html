@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}View Proofs - Carbon Credit System{% endblock %}
+
+{% block body %}
+<div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <ul>
+            <li><a href="{% url 'app:officer_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'app:view_proofs' %}">Verify Tree Proofs</a></li> <!-- ✅ Added this -->
+            <li><a href="{% url 'app:logout' %}" class="logout-btn">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Tree Plantation Proofs</h1>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Farmer</th>
+                    <th>Tree Count</th>
+                    <th>Proof Image</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proof in proofs %}
+                <tr>
+                    <td>{{ proof.farmer.user.username }}</td>
+                    <td>{{ proof.tree_count }}</td>
+                    <td>
+                        {% if proof.proof_image %}
+                            <img src="{{ proof.proof_image.url }}" alt="Proof Image" width="100">
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if proof.verified %}
+                            ✅ Verified
+                        {% else %}
+                            ⏳ Pending
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="center">No proofs found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Sidebar & Styling -->
+<style>
+    .main-container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        background: #2c5e1a;
+        padding: 20px;
+        color: white;
+        height: 100vh;
+        position: fixed;
+    }
+
+    .sidebar h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar ul li {
+        margin: 15px 0;
+    }
+
+    .sidebar ul li a {
+        text-decoration: none;
+        color: white;
+        display: block;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .sidebar ul li a:hover, .sidebar ul li a.active {
+        background: #4CAF50;
+    }
+
+    /* Main Content */
+    .content {
+        margin-left: 270px;
+        padding: 20px;
+        flex: 1;
+        background: #f4f4f4;
+        min-height: 100vh;
+    }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .styled-table th, .styled-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .styled-table th {
+        background: #2c5e1a;
+        color: white;
+    }
+
+    .center {
+        text-align: center;
+    }
+</style>
+
+{% endblock %}

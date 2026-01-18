@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Carbon Credit System{% endblock %}
+
+{% block body %}
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #e8f5e9;">
+        <div style="width: 350px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center;">
+            <h2 style="color: #2e7d32;">Login</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <p style="color: red;">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div style="text-align: left; margin-bottom: 10px;">
+                    <label>Username:</label>
+                    <input type="text" name="username" required style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <div style="text-align: left; margin-bottom: 15px;">
+                    <label>Password:</label>
+                    <input type="password" name="password" required style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <button type="submit" style="width: 100%; background-color: #388e3c; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

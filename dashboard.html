@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Carbon Credit System{% endblock %}
+
+{% block body %}
+    <div style="display: flex; height: 100vh; background-color: #e8f5e9;">
+        <!-- Sidebar -->
+        <div style="width: 250px; background: #2e7d32; padding: 20px; color: white; display: flex; flex-direction: column;">
+            <h2 style="text-align: center; border-bottom: 1px solid white; padding-bottom: 10px;">Menu</h2>
+            <a href="{% url 'app:index' %}" style="color: white; text-decoration: none; padding: 10px; display: block; border-radius: 5px; transition: 0.3s;">🏠 Home</a>
+            <a href="{% url 'app:dashboard' %}" style="color: white; text-decoration: none; padding: 10px; display: block; border-radius: 5px; transition: 0.3s;">📊 Dashboard</a>
+            <a href="#" style="color: white; text-decoration: none; padding: 10px; display: block; border-radius: 5px; transition: 0.3s;">👤 Profile</a>
+            <a href="{% url 'app:logout' %}" style="color: white; text-decoration: none; padding: 10px; display: block; border-radius: 5px; background: #d32f2f; text-align: center; margin-top: auto;">🚪 Logout</a>
+        </div>
+
+        <!-- Main Content Area -->
+        <div style="flex-grow: 1; padding: 20px; background: white; border-radius: 10px; margin: 20px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+            <h2 style="color: #2e7d32;">Dashboard</h2>
+            <p style="font-size: 18px;">Welcome, <strong>{{ user.username }}</strong>!</p>
+            <p style="color: #555;">You are logged into the Carbon Credit System.</p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Proof - Carbon Credit System{% endblock %}
+
+{% block body %}
+<style>
+    /* Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    /* Dashboard Layout */
+    .dashboard-container {
+        display: flex;
+        height: calc(100vh - 60px); /* full viewport height minus navbar height */
+        overflow: hidden;
+        background-color: #f5f5f5;
+        font-family: Arial, sans-serif;
+        margin-top: 60px; /* push content below navbar */
+    }
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        background: #2c5e1a;
+        color: white;
+        padding: 20px;
+        height: 100%;
+        position: fixed;
+        top: 60px; /* below navbar */
+        left: 0;
+        overflow-y: auto;
+    }
+    .sidebar h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 22px;
+    }
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+    .sidebar ul li {
+        margin: 15px 0;
+    }
+    .sidebar ul li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 12px;
+        border-radius: 5px;
+        transition: 0.3s;
+        font-size: 16px;
+    }
+    .sidebar ul li a:hover,
+    .sidebar ul li a.active {
+        background: #3f7a2a;
+    }
+    /* Main Content */
+    .content {
+        margin-left: 250px; /* offset for sidebar */
+        padding: 30px;
+        width: calc(100% - 250px);
+        height: 100%;
+        overflow-y: auto; /* scrollable main content */
+        background-color: #f5f5f5;
+    }
+    /* Card Styling */
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    /* Form Styling */
+    .form-container label {
+        display: block;
+        font-weight: bold;
+        margin: 10px 0 5px;
+    }
+    .form-container input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    .submit-btn {
+        width: 100%;
+        background: #2c5e1a;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+    .submit-btn:hover {
+        background: #3f7a2a;
+    }
+    /* Table Styling */
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .styled-table th, .styled-table td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    .styled-table thead {
+        background: #2c5e1a;
+        color: white;
+        font-size: 16px;
+    }
+    .styled-table tbody tr:hover {
+        background: #f1f1f1;
+    }
+    .proof-image {
+        width: 80px;
+        border-radius: 5px;
+    }
+    /* Back Button */
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        color: white;
+        background: #3f7a2a;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+    .back-btn:hover {
+        background: #2c5e1a;
+    }
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            top: 60px;
+            text-align: center;
+        }
+        .content {
+            margin-left: 0;
+            padding: 20px;
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Farmer Dashboard</h2>
+        <ul>
+            <li><a href="{% url 'app:farmer_dashboard' %}">🏠 Dashboard</a></li>
+            <li><a href="{% url 'app:submit_proof_page' %}" class="active">🌳 Submit Proof</a></li>
+            
+            <li><a href="{% url 'app:logout' %}" class="logout-btn">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="card">
+            <h2 class="dashboard-title">Submit Tree Plantation Proof</h2>
+            <!-- Proof Upload Form -->
+            <form action="{% url 'app:upload_proof' %}" method="POST" enctype="multipart/form-data" class="form-container">
+                {% csrf_token %}
+                <label for="tree_count">Number of Trees Planted:</label>
+                <input type="number" name="tree_count" min="1" required>
+                <label for="proof_image">Upload Proof Image:</label>
+                <input type="file" name="proof_image" accept="image/*" required>
+                <button type="submit" class="submit-btn">Submit Proof</button>
+            </form>
+        </div>
+        <div class="card">
+            <h3>Your Submitted Proofs</h3>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Tree Count</th>
+                        <th>Proof Image</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proof in proofs %}
+                    <tr>
+                        <td>{{ proof.tree_count }}</td>
+                        <td><img src="{{ proof.proof_image.url }}" alt="Proof Image" class="proof-image"></td>
+                        <td>
+                            {% if proof.verified %}
+                                ✅ Verified
+                            {% else %}
+                                ⏳ Pending
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No proof submitted yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <a href="{% url 'app:farmer_dashboard' %}" class="back-btn">⬅ Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}About Carbon Credit System{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>About the Carbon Credit System</h1>
+    
+    <section class="project-info">
+        <h2>Our Mission</h2>
+        <p>
+            The Carbon Credit System is designed to encourage industries to offset their carbon emissions by supporting farmers 
+            who plant trees. This initiative promotes environmental sustainability and provides financial benefits to farmers.
+        </p>
+        <img src="/static/images/mission.jpeg" alt="Green Mission" class="about-image">
+    </section>
+
+    <section class="how-it-works">
+        <h2>How It Works</h2>
+        <p>
+            - Farmers plant trees and submit proof of plantation.<br>
+            - Government officers verify the proof and issue carbon credits.<br>
+            - Industries can purchase carbon credits from farmers to compensate for their emissions.<br>
+            - Transactions are securely handled using Ethereum-based payments.
+        </p>
+        <img src="/static/images/how.jpeg" alt="How It Works" class="about-image">
+    </section>
+
+    <section class="what-is-credit">
+        <h2>What is a Carbon Credit?</h2>
+        <p>
+            A carbon credit is a certificate representing one metric ton of CO₂ removed from the atmosphere. 
+            Businesses and individuals can purchase these credits to compensate for their emissions, 
+            supporting sustainability initiatives like tree planting.
+        </p>
+        <img src="/static/images/carbon.jpeg" alt="Carbon Credit" class="about-image">
+    </section>
+
+    <section class="benefits">
+        <h2>Benefits of Our System</h2>
+        <ul>
+            <li>Encourages tree plantation and environmental conservation.</li>
+            <li>Provides financial incentives to farmers.</li>
+            <li>Helps industries meet their sustainability goals.</li>
+            <li>Uses secure Ethereum-based transactions for transparency.</li>
+        </ul>
+        <img src="/static/images/benefit.jpeg" alt="Benefits" class="about-image">
+    </section>
+</div>
+
+<style>
+    .container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    h1 {
+        color: #2c5e1a;
+    }
+    h2 {
+        color: #2c5e1a;
+        margin-top: 20px;
+    }
+    p, ul {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #333;
+    }
+    .about-image {
+        width: 80%;
+        max-width: 500px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+</style>
+{% endblock %}

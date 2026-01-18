@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Carbon Credit System{% endblock %}
+
+{% block body %}
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #e8f5e9;">
+        <div style="width: 350px; padding: 20px; background: white; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center;">
+            <h2 style="color: #2e7d32;">Register</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <p style="color: red;">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div style="text-align: left; margin-bottom: 10px;">
+                    <label>Username:</label>
+                    <input type="text" name="username" required style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+                
+                <div style="text-align: left; margin-bottom: 10px;">
+                    <label>Password:</label>
+                    <input type="password" name="password" required style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <div style="text-align: left; margin-bottom: 10px;">
+                    <label>Confirm Password:</label>
+                    <input type="password" name="confirm_password" required style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <!-- Role selection -->
+                <div style="text-align: left; margin-bottom: 15px;">
+                    <label>Select Role:</label>
+                    <select name="role" id="roleSelect" required onchange="toggleCityField()">
+                        <option value="farmer">Farmer</option>
+                        <option value="industry">Industry</option>
+                        <option value="officer">Government Officer</option>
+                    </select>
+                </div>
+
+                <!-- City input (only for Farmer & Industry) -->
+                <div id="cityField" style="display: none; text-align: left; margin-bottom: 10px;">
+                    <label>City:</label>
+                    <input type="text" name="city" id="cityInput" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px;">
+                </div>
+
+                <button type="submit" style="width: 100%; background-color: #4caf50; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+                    Register
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleCityField() {
+            var role = document.getElementById("roleSelect").value;
+            var cityField = document.getElementById("cityField");
+    
+            if (role === "farmer" || role === "industry") {
+                cityField.style.display = "block";
+                document.getElementById("cityInput").required = true;
+            } else {
+                cityField.style.display = "none";
+                document.getElementById("cityInput").required = false;
+            }
+        }
+    
+        // Run on page load to ensure the correct state
+        document.addEventListener("DOMContentLoaded", function() {
+            toggleCityField();
+        });
+    </script>
+    
+
+{% endblock %}

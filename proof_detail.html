@@ -1,0 +1,44 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<h2>Tree Plantation Proof</h2>
+<table class="styled-table">
+    <tr>
+        <th>Farmer</th>
+        <td>{{ proof.farmer.user.username }}</td>
+    </tr>
+    <tr>
+        <th>Tree Count</th>
+        <td>{{ proof.tree_count }}</td>
+    </tr>
+    <tr>
+        <th>Proof Image</th>
+        <td><img src="{{ proof.proof_image.url }}" width="300"></td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td>
+            {% if proof.verified %}
+                <span style="color: green;">Verified</span>
+            {% else %}
+                <span style="color: red;">Pending / Rejected</span>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+<!-- Buttons to Verify or Reject -->
+<form action="{% url 'app:verify_tree_proof' proof.id %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-green">Verify</button>
+</form>
+
+<form action="{% url 'app:reject_tree_proof' proof.id %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-red">Reject</button>
+</form>
+
+<br><br>
+<a href="{% url 'app:view_proofs' %}" class="btn">Back to Proofs List</a>
+
+{% endblock %}
